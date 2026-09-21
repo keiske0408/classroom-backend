@@ -1,54 +1,54 @@
-import { eq } from 'drizzle-orm';
-import { db } from './db/index.js';
-import { demoUsers } from './db/schema/index.js';
+// import { eq } from 'drizzle-orm';
+// import { db } from './db/index.js';
+// import { demoUsers } from './db/schema/index.js';
 
-async function main() {
-	const email = `admin-${Date.now()}@example.com`;
+// async function main() {
+// 	const email = `admin-${Date.now()}@example.com`;
 
-	try {
-		console.log('Performing CRUD operations...');
+// 	try {
+// 		console.log('Performing CRUD operations...');
 
-		const [newUser] = await db
-			.insert(demoUsers)
-			.values({ name: 'Admin User', email })
-			.returning();
+// 		const [newUser] = await db
+// 			.insert(demoUsers)
+// 			.values({ name: 'Admin User', email })
+// 			.returning();
 
-		if (!newUser) {
-			throw new Error('Failed to create user');
-		}
+// 		if (!newUser) {
+// 			throw new Error('Failed to create user');
+// 		}
 
-		console.log('CREATE: New user created:', newUser);
+// 		console.log('CREATE: New user created:', newUser);
 
-		const [foundUser] = await db
-			.select()
-			.from(demoUsers)
-			.where(eq(demoUsers.id, newUser.id));
+// 		const [foundUser] = await db
+// 			.select()
+// 			.from(demoUsers)
+// 			.where(eq(demoUsers.id, newUser.id));
 
-		if (!foundUser) {
-			throw new Error('Failed to find user');
-		}
+// 		if (!foundUser) {
+// 			throw new Error('Failed to find user');
+// 		}
 
-		console.log('READ: Found user:', foundUser);
+// 		console.log('READ: Found user:', foundUser);
 
-		const [updatedUser] = await db
-			.update(demoUsers)
-			.set({ name: 'Super Admin' })
-			.where(eq(demoUsers.id, newUser.id))
-			.returning();
+// 		const [updatedUser] = await db
+// 			.update(demoUsers)
+// 			.set({ name: 'Super Admin' })
+// 			.where(eq(demoUsers.id, newUser.id))
+// 			.returning();
 
-		if (!updatedUser) {
-			throw new Error('Failed to update user');
-		}
+// 		if (!updatedUser) {
+// 			throw new Error('Failed to update user');
+// 		}
 
-		console.log('UPDATE: User updated:', updatedUser);
+// 		console.log('UPDATE: User updated:', updatedUser);
 
-		await db.delete(demoUsers).where(eq(demoUsers.id, newUser.id));
-		console.log('DELETE: User deleted.');
-		console.log('\nCRUD operations completed successfully.');
-	} catch (error) {
-		console.error('Error performing CRUD operations:', error);
-		process.exitCode = 1;
-	}
-}
+// 		await db.delete(demoUsers).where(eq(demoUsers.id, newUser.id));
+// 		console.log('DELETE: User deleted.');
+// 		console.log('\nCRUD operations completed successfully.');
+// 	} catch (error) {
+// 		console.error('Error performing CRUD operations:', error);
+// 		process.exitCode = 1;
+// 	}
+// }
 
-await main();
+// await main();
