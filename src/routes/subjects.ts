@@ -12,8 +12,14 @@ router.get("/", async (req, res) => {
   try {
     const { search, department, page = 1, limit = 10 } = req.query;
 
-    const currentPage = Math.max(1, +page);
-    const limitPerPage = Math.max(1, +limit);
+    const parsedPage = Number(page);
+    const parsedLimit = Number(limit);
+    const currentPage =
+      Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+    const limitPerPage =
+      Number.isInteger(parsedLimit) && parsedLimit > 0
+        ? Math.min(parsedLimit, 100)
+        : 10;
 
     const offset = (currentPage - 1) * limitPerPage;
 
@@ -37,7 +43,7 @@ router.get("/", async (req, res) => {
       filterConditions.length > 0 ? and(...filterConditions) : undefined;
 
     const countResult = await db
-      .select({ count: sql<number>`count(*)` })
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
       .from(subjects)
       .leftJoin(departments, eq(subjects.departmentId, departments.id))
       .where(whereClause);
@@ -49,7 +55,7 @@ router.get("/", async (req, res) => {
       department: { ...getTableColumns(departments) },
     }).from(subjects).leftJoin(departments, eq(subjects.departmentId, departments.id))
     .where(whereClause)
-    .orderBy(desc(subjects.createdAt))
+    .orderBy(desc(subjects.createdAt), desc(subjects.id))
     .limit(limitPerPage)
     .offset(offset);
     ;
