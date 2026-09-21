@@ -1,9 +1,19 @@
 import express from "express";
+import subjectsRouter from "./routes/subjects.js";
+import cors from "cors";
 
 const app = express();
 const port = Number(process.env.PORT) || 8000;
 
+app.use(cors({
+	origin: process.env.FRONTEND_URL,
+	methods: ["GET", "POST", "PUT", "DELETE"],
+	credentials: true,
+}))
+
 app.use(express.json());
+
+app.use("/api/subjects", subjectsRouter);
 
 app.get("/", (_request, response) => {
 	response.send("Classroom backend is running.");
